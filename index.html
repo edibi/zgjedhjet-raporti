@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="sq">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zgjedhjet në Shqipëri · Raporti</title>
+<meta name="description" content="Versioni web i raportit Power BI për zgjedhjet parlamentare 2025 në Shqipëri: rezultatet, territori, lëvizshmëria e votuesve, analiza gjinore, Tirana dhe Vlora.">
+<meta property="og:title" content="Zgjedhjet në Shqipëri · Raporti">
+<meta property="og:description" content="Raporti interaktiv i zgjedhjeve parlamentare 2025, me filtra, harta dhe skenarë.">
+<meta property="og:type" content="website">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+<a class="skip" href="#faqja">Kalo te raporti</a>
+<header class="top">
+  <div class="top-in">
+    <span class="brand">Zgjedhjet në Shqipëri <span class="brand-sub">· Raporti 2025</span></span>
+    <button class="theme" id="theme" type="button" aria-label="Ndrysho pamjen"></button>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="Faqet e raportit"></nav>
+</header>
+<main id="faqja" tabindex="-1">
+  <div class="pagebar" id="pagebar"></div>
+  <div class="canvas" id="canvas" aria-live="polite"><p class="loading">Po ngarkohen të dhënat…</p></div>
+</main>
+<footer class="foot">
+  <p>Burimi: <a href="https://iemis.kqz.gov.al/results2025-finale/?lang=AL&amp;v1=ALL">KQZ</a> (Kuvendi 2021 dhe 2025, vendore 2023), INSTAT (popullsia 2025), <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> (kufijtë). Kopje web e raportit Power BI te <a href="https://github.com/edibi/zgjedhjet-shqiperi">edibi/zgjedhjet-shqiperi</a>. Projekt i pavarur, pa lidhje me KQZ-në apo ndonjë subjekt politik.</p>
+</footer>
+<script src="app.js?v=1"></script>
+</body>
+</html>
