@@ -1585,7 +1585,12 @@
   function route() {
     const pages = D.pages.filter(p => !p.hidden);
     const slug = decodeURIComponent(location.hash.slice(1));
-    renderPage(pages.find(p => p.slug === slug) || pages[0]);
+    const page = pages.find(p => p.slug === slug) || pages[0];
+    renderPage(page);
+    // Google Analytics: faqet ndërrohen me #, ndaj çdo ndërrim dërgohet si page_view
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'page_view', { page_title: page.name, page_location: location.origin + location.pathname + '#' + page.slug, page_path: location.pathname + '#' + page.slug });
+    }
   }
   const THEMES = [['auto', 'Pamja: automatike'], ['light', 'Pamja: e çelët'], ['dark', 'Pamja: e errët']];
   function applyTheme(t) {
