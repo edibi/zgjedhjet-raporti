@@ -1587,11 +1587,17 @@
     const slug = decodeURIComponent(location.hash.slice(1));
     const page = pages.find(p => p.slug === slug) || pages[0];
     renderPage(page);
-    // Google Analytics: faqet ndërrohen me #, ndaj çdo ndërrim dërgohet si page_view
-    if (typeof window.gtag === 'function') {
-      window.gtag('event', 'page_view', { page_title: page.name, page_location: location.origin + location.pathname + '#' + page.slug, page_path: location.pathname + '#' + page.slug });
-    }
+    count(page);
   }
+  /* GoatCounter: faqet ndërrohen me #, ndaj çdo faqe numërohet veç. Nëse skripti s'është ngarkuar ende, numërohet kur ngarkohet. */
+  let pendingCount = null;
+  function count(page) {
+    const c = { path: location.pathname + '#' + page.slug, title: page.name };
+    if (window.goatcounter && window.goatcounter.count) window.goatcounter.count(c);
+    else pendingCount = c;
+  }
+  const gcScript = document.getElementById('gc');
+  if (gcScript) gcScript.addEventListener('load', () => { if (pendingCount && window.goatcounter && window.goatcounter.count) { window.goatcounter.count(pendingCount); pendingCount = null; } });
   const THEMES = [['auto', 'Pamja: automatike'], ['light', 'Pamja: e çelët'], ['dark', 'Pamja: e errët']];
   function applyTheme(t) {
     if (t === 'auto') document.documentElement.removeAttribute('data-theme');
