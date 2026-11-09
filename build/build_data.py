@@ -85,7 +85,7 @@ def detajuar(p):
 
 def skenar(p):
     if p in ("NISMA-SHB", "MUNDESIA", "L. BASHKE"):
-        return "Kualicioni SHESHIT"
+        return "Grupimi SHESHIT"
     return grupi(p)
 
 

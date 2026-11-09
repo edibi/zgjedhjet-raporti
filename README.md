@@ -51,6 +51,8 @@ python -m http.server 8770
 - **INSTAT**: popullsia 2025, për vlerësimin e zgjedhësve rezidentë.
 - **[OpenStreetMap](https://www.openstreetmap.org/copyright)**: kufijtë e njësive të Tiranës dhe Vlorës.
 
+Në skenarin 2027, Grupimi SHESHIT = Aktivistat e Sheshit + Shqipëria Bëhet + MUNDESIA + L. BASHKE. Në votat e 2025 numërohen NISMA-SHB (nga 2027 thjesht Shqipëria Bëhet), MUNDESIA dhe L. BASHKE; Aktivistat e Sheshit nuk kishin listë.
+
 > **Skenarët 2027 nuk janë parashikim.** Rezultatet zyrtare janë vetëm ato të KQZ-së.
 
 Ky është një projekt i pavarur, pa lidhje me KQZ-në apo ndonjë subjekt politik.

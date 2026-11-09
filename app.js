@@ -3,7 +3,7 @@
    Faqet, pozicionet, titujt dhe tekstet vijnë nga PBIP (data/report.json, nga build/build_data.py).
    Masat (DAX) janë rishkruar më poshtë te "Masat". DOM ndërtohet vetëm me textContent. */
 (function () {
-  const DATA_URL = 'data/report.json?v=1';
+  const DATA_URL = 'data/report.json?v=2';
   const NS = 'http://www.w3.org/2000/svg';
   const FONT = '"Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif';
 
@@ -118,16 +118,16 @@
   const ORD = {
     det: ['PS', 'PD', 'PSD', 'MUNDESIA', 'NISMA-SHB', 'L. BASHKE', 'Te tjeret'],
     grupi: ['PS + PSD', 'PD', 'MUNDESIA', 'NISMA-SHB', 'L. BASHKE', 'Te tjeret'],
-    skenar: ['Kualicioni SHESHIT', 'PS + PSD', 'PD', 'Te tjeret'],
+    skenar: ['Grupimi SHESHIT', 'PS + PSD', 'PD', 'Te tjeret'],
     tooltip: ['PS + PSD', 'PS', 'PSD', 'PD', 'MUNDESIA', 'NISMA-SHB', 'L. BASHKE', 'Te tjeret'],
   };
   const PC = {
     'PS + PSD': '#5E3894', PS: '#5E3894', PD: '#00529C', PSD: '#0C5D34', MUNDESIA: '#FFC04D', 'NISMA-SHB': '#F48221',
-    'L. BASHKE': '#E82D36', BASHKE: '#E82D36', 'Te tjeret': '#9E9E9E', 'Kualicioni SHESHIT': '#D6336C',
+    'L. BASHKE': '#E82D36', BASHKE: '#E82D36', 'Te tjeret': '#9E9E9E', 'Grupimi SHESHIT': '#D6336C',
   };
   const pcol = g => PC[g] || '#9E9E9E';
   const C_GREY = '#9E9E9E', C_BLUE = '#4A9FD8', C_VOTE = '#8A8886';
-  const MODE_LABEL = { grupi: 'PS + PSD kualicion', det: 'PS, PSD të ndara' };
+  const MODE_LABEL = { grupi: 'PS + PSD bashkë', det: 'PS, PSD të ndara' };
   const RES = 'Rezidentë (INSTAT)', KQZ = 'Lista e KQZ';
 
   function prep(d) {
@@ -218,19 +218,19 @@
   const OTHERS = ['PS + PSD', 'PD', 'Te tjeret'];
   function scen(r, x, y) {
     const pv = pvotes(r), g = gsum(pv, 'skenar'), T = tot(pv);
-    const sh = g.get('Kualicioni SHESHIT') || 0, ps = g.get('PS + PSD') || 0, pd = g.get('PD') || 0, tj = g.get('Te tjeret') || 0;
-    const v = { 'Kualicioni SHESHIT': sh + x * ps + y * pd, 'PS + PSD': ps * (1 - x), PD: pd * (1 - y), 'Te tjeret': tj };
-    const base = { 'Kualicioni SHESHIT': sh, 'PS + PSD': ps, PD: pd, 'Te tjeret': tj };
+    const sh = g.get('Grupimi SHESHIT') || 0, ps = g.get('PS + PSD') || 0, pd = g.get('PD') || 0, tj = g.get('Te tjeret') || 0;
+    const v = { 'Grupimi SHESHIT': sh + x * ps + y * pd, 'PS + PSD': ps * (1 - x), PD: pd * (1 - y), 'Te tjeret': tj };
+    const base = { 'Grupimi SHESHIT': sh, 'PS + PSD': ps, PD: pd, 'Te tjeret': tj };
     let rival = OTHERS[0];
     for (const k of OTHERS) if (v[k] > v[rival]) rival = k;
-    const diff = v['Kualicioni SHESHIT'] - v[rival];
-    const rank = 1 + OTHERS.filter(k => v[k] >= v['Kualicioni SHESHIT']).length;
+    const diff = v['Grupimi SHESHIT'] - v[rival];
+    const rank = 1 + OTHERS.filter(k => v[k] >= v['Grupimi SHESHIT']).length;
     return {
-      v, base, T, diff, rival, rank, winner: diff > 0 ? 'Kualicioni SHESHIT' : rival,
+      v, base, T, diff, rival, rank, winner: diff > 0 ? 'Grupimi SHESHIT' : rival,
       pct: k => div(v[k], T), pct25: k => div(base[k], T), sh25: div(sh, T), transfer: x * ps + y * pd,
       verdict: diff > 0
-        ? `PO: Kualicioni SHESHIT del i pari, ${fInt(diff)} vota mbi ${rival}`
-        : `JO: Kualicioni SHESHIT del i ${rank}-ti, ${fInt(-diff)} vota pas ${rival}`,
+        ? `PO: Grupimi SHESHIT del i pari, ${fInt(diff)} vota mbi ${rival}`
+        : `JO: Grupimi SHESHIT del i ${rank}-ti, ${fInt(-diff)} vota pas ${rival}`,
     };
   }
   function njaSet(r) { const s = new Set(); for (const i of r) s.add(qvN[i]); return s; }
@@ -1450,7 +1450,8 @@
     };
   }
 
-  const SCEN_DEF = { 'Tiranë': [0.32, 0.32], 'Vlorë': [0.30, 0.45] };
+  const SHESHI_NOTE = 'Në votat e 2025 numërohen NISMA-SHB (nga 2027 thjesht Shqipëria Bëhet), MUNDESIA dhe L. BASHKE; Aktivistat e Sheshit nuk kishin listë.';
+  const SCEN_DEF ={ 'Tiranë': [0.32, 0.32], 'Vlorë': [0.30, 0.45] };
   function pScenario(page) {
     const pid = page.id, city = cityName(page), U = unitIdx(city), mapD = D.maps[city];
     const P = ps(pid);
@@ -1463,8 +1464,8 @@
         if (v.type === 'slicer') return t.startsWith('X') ? hSlider({ get: () => P.x, set: x => { P.x = x; } }) : hSlider({ get: () => P.y, set: y => { P.y = y; } });
         if (v.type === 'card') {
           if (t.startsWith('A del')) return cardH(x => { const s = scen(ctx(x.id).rows, P.x, P.y); return { value: s.verdict, color: s.diff > 0 ? 'var(--pos)' : 'var(--neg)', small: true }; });
-          if (t.startsWith('Votat')) return cardH(x => ({ value: fInt(scen(ctx(x.id).rows, P.x, P.y).v['Kualicioni SHESHIT']) }));
-          if (t.startsWith('%')) return cardH(x => ({ value: fPct(scen(ctx(x.id).rows, P.x, P.y).pct('Kualicioni SHESHIT')) }));
+          if (t.startsWith('Votat')) return cardH(x => ({ value: fInt(scen(ctx(x.id).rows, P.x, P.y).v['Grupimi SHESHIT']) }));
+          if (t.startsWith('%')) return cardH(x => ({ value: fPct(scen(ctx(x.id).rows, P.x, P.y).pct('Grupimi SHESHIT')) }));
           if (t.startsWith('Diferenca')) return cardH(x => ({ value: fSigned(scen(ctx(x.id).rows, P.x, P.y).diff) }));
         }
         if (v.type === 'shapeMap') return chart(body => {
@@ -1473,7 +1474,7 @@
           choropleth(body, {
             map: mapD, kind: 'blue', has: n => g.has(U.get(n)), value: n => S(n).diff, fmt: fSigned, label: t,
             active: c.own ? D.njesi[c.own.nja][0] : null,
-            tip: n => { const s = S(n); return tipNode(n, [['% SHESHI 2025', fPct(s.sh25)], ['% SHESHI skenar', fPct(s.pct('Kualicioni SHESHIT'))], ['% PS PSD skenar', fPct(s.pct('PS + PSD'))], ['% PD skenar', fPct(s.pct('PD'))], ['Fituesi skenar', s.winner], ['Diferenca e SHESHIT', fSigned(s.diff)]]); },
+            tip: n => { const s = S(n); return tipNode(n, [['% SHESHI 2025', fPct(s.sh25)], ['% SHESHI skenar', fPct(s.pct('Grupimi SHESHIT'))], ['% PS PSD skenar', fPct(s.pct('PS + PSD'))], ['% PD skenar', fPct(s.pct('PD'))], ['Fituesi skenar', s.winner], ['Diferenca e SHESHIT', fSigned(s.diff)]]); },
             click: n => select(pid, { src: v.id, nja: U.get(n) }),
           });
         });
@@ -1483,7 +1484,7 @@
           barChart(body, {
             orient: 'h', cats: ks.map(k => ({ key: k, label: k })), legend: true, series: [{ label: 'Rezultati 2025', color: C_GREY }, { label: 'Skenari', color: C_BLUE }],
             val: (ci, si) => (si ? s.pct(ks[ci]) : s.pct25(ks[ci])), labelFmt: x => fPct(x), detail: (ci, si) => fShort(si ? s.v[ks[ci]] : s.base[ks[ci]]),
-            tip: ci => tipNode(ks[ci], [['Rezultati 2025', fPct(s.pct25(ks[ci]))], ['Vota 2025', fInt(s.base[ks[ci]])], ['Skenari', fPct(s.pct(ks[ci]))], ['Vota në skenar', fInt(s.v[ks[ci]])]]),
+            tip: ci => tipNode(ks[ci], [['Rezultati 2025', fPct(s.pct25(ks[ci]))], ['Vota 2025', fInt(s.base[ks[ci]])], ['Skenari', fPct(s.pct(ks[ci]))], ['Vota në skenar', fInt(s.v[ks[ci]])]], ks[ci] === 'Grupimi SHESHIT' ? SHESHI_NOTE : null),
           });
         });
         if (v.type === 'tableEx') return chart(body => {
